@@ -14,11 +14,11 @@ class LoginPage:
         password_input.send_keys(password)
         login_button = browser.find_element_by_xpath("//button[@type='submit']")
         login_button.click()
-        sleep(5)
+        print("Logging in...")
 
     def go_to_directs(self):
         directs_button = self.browser.find_element_by_css_selector("[aria-label='Direct']").click()
-        sleep(2)
+        print("Going to direct messages...")
         return DirectsPage(self.browser)
 
 class HomePage:
@@ -42,10 +42,21 @@ class DirectsPage:
 
     def find_messages(self, name):
         self.browser.find_element_by_xpath("/html/body/div[4]/div/div/div/div[3]/button[2]").click()
-        self.browser.find_element_by_xpath("//*[@id='react-root']/section/div/div[2]/div/div/div[1]/div[2]/div/div/div/div/div[5]/a").click()
+        # self.browser.find_element_by_xpath("//*[@id='react-root']/section/div/div[2]/div/div/div[1]/div[2]/div/div/div/div/div[5]/a").click()
+        message_tab = self.browser.find_element_by_partial_link_text(name)
+        print("Returning message tab...")
+        return message_tab
+        
+    def send_message(self, message_tab, message):
+        message_tab.click()
         message_input = self.browser.find_element_by_css_selector(".ItkAi > textarea:nth-child(1)")
-        message_input.send_keys("This message was sent by the bot")
+        sleep(2)
+        print(f"Sending message: {message}")
+        message_input.send_keys(message)
+        sleep(2)
         message_input.send_keys("\n")
+        sleep(2)
+        print("Sent message!")
 
 def test_login_page(browser, username, password):
     home_page = HomePage(browser)
@@ -55,7 +66,7 @@ def test_login_page(browser, username, password):
     errors = browser.find_elements_by_css_selector('#error_message')
     assert len(errors) == 0
 
-def go_to_directs(browser, username, password):
+def navigate_to_direct_messages(browser, username, password):
     home_page = HomePage(browser)
     login_page = home_page.go_to_login_page()
     login_page.login(username, password)
@@ -64,20 +75,23 @@ def go_to_directs(browser, username, password):
 
     return directs_page
 
-def message_someone(browser, name):
-    directs_page = go_to_directs(browser, username, password)
+def message_someone(browser, name, message):
+    directs_page = navigate_to_direct_messages(browser, username, password)
     specific_chat = directs_page.find_messages(name)
+    directs_page.send_message(specific_chat, message)
 
 browser = webdriver.Firefox()
-browser.implicitly_wait(5)
+browser.implicitly_wait(3)
 
 
 username = "bernd.martin2305"
 password = "HCDj1d5$3€"
 
-zottel = "zottelcorn"
+recipient = "heinz"
 
-message_someone(browser, zottel)
+message = "Hello World"
+
+message_someone(browser, recipient, message)
 
 browser.close()
 
