@@ -4,4 +4,6 @@
 .\install_gecko.ps1;
 .\create_venv.ps1;
 
+C:\envs\insta\Scripts\activate
 python insta_bot.py;
+C:\envs\insta\Scripts\activate
