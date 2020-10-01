@@ -36,3 +36,7 @@ A rudimentary chatbot for instagram. Sends messages to specified chats through f
     .\run_insta_bot.ps1
     ```
     and enjoy the outcome!
+
+## TODO
+* Rewrite the structure of files so that first, everything is installed, then the venv is created separately, and then the script is run (or pack venvs and python script into one).
+* Test message and name input.
